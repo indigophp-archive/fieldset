@@ -1,0 +1,5 @@
+suites:
+  skeleton_suite:
+    namespace: Indigo\Fieldset
+    psr4_prefix: Indigo\Fieldset
+formatter.name: pretty

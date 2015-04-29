@@ -1,0 +1,10 @@
+suites:
+  form_suite:
+    namespace: Indigo\Fieldset
+    psr4_prefix: Indigo\Fieldset
+extensions:
+  - PhpSpec\Extension\CodeCoverageExtension
+formatter.name: pretty
+code_coverage:
+  format: clover
+  output: build/coverage.xml

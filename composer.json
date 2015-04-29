@@ -1,0 +1,41 @@
+{
+    "name": "indigophp/fieldset",
+    "description": "Custom fieldset features built around Fuel Fieldset and Validation package",
+    "license": "MIT",
+    "keywords": ["fieldset", "form", "validation"],
+    "homepage": "https://indigophp.com",
+    "authors": [
+        {
+            "name": "Márk Sági-Kazár",
+            "email": "mark.sagikazar@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.4",
+        "fuelphp/fieldset": "dev-master",
+        "fuelphp/validation": "dev-master",
+        "doctrine/annotations": "~1.2",
+        "jms/metadata": "~1.5"
+    },
+    "require-dev": {
+        "phpspec/phpspec": "~2.1",
+        "henrikbjorn/phpspec-code-coverage" : "~1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Indigo\\Fieldset\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Indigo\\Fieldset\\Stubs\\": "stubs/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "0.1-dev"
+        }
+    },
+    "prefer-stable": true,
+    "minimum-stability": "dev"
+}
