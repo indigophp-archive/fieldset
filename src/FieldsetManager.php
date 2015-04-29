@@ -92,7 +92,7 @@ class FieldsetManager
      */
     public function populateForm($object, Form $form)
     {
-        $classMetadata = $this->metadataFactory->getMetadataForClass($class);
+        $classMetadata = $this->metadataFactory->getMetadataForClass(get_class($object));
         $data = [];
 
         foreach ($classMetadata->propertyMetadata as $propertyMetadata) {

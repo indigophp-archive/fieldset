@@ -22,6 +22,34 @@ $ composer require indigophp/fieldset
 
 ## Usage
 
+Create your entity which you want to use in the form:
+
+``` php
+class Entity
+{
+    /**
+     * @Form\Type('text')
+     */
+    protected $property;
+}
+```
+
+Create your metadata factory:
+
+``` php
+use Indigo\Fieldset\FieldsetManager;
+use Indigo\Fieldset\Metadata\Driver\Annotation;
+use Metadata\MetadataFactory;
+
+$driver = new Annotation(/* instance of Doctrine\Common\Annotations\Reader */);
+$factory = new MetadataFactory($driver);
+$manager = new FieldsetManager($factory, /* instance of Fuel\Fieldset\Builder\BuilderInterface */);
+
+$form = $manager->generateForm('Entity');
+$manager->populateForm($entity, $form);
+$validator = $manager->generateValidation('Entity');
+```
+
 
 ## Testing
 
