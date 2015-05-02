@@ -100,6 +100,10 @@ class FieldsetManager
         $data = [];
 
         foreach ($classMetadata->propertyMetadata as $propertyMetadata) {
+            if (!isset($propertyMetadata->type)) {
+                continue;
+            }
+
             $data[$propertyMetadata->name] = $propertyMetadata->getValue($object);
         }
 
@@ -117,6 +121,10 @@ class FieldsetManager
         $classMetadata = $this->metadataFactory->getMetadataForClass($class);
 
         foreach ($classMetadata->propertyMetadata as $propertyMetadata) {
+            if (!isset($propertyMetadata->rules)) {
+                continue;
+            }
+
             $validator->addField($propertyMetadata->name, $propertyMetadata->label);
 
             foreach ($propertyMetadata->rules as $name => $arguments) {

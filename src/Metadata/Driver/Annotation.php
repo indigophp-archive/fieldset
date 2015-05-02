@@ -56,10 +56,16 @@ class Annotation implements DriverInterface
             $propertyMetadata = new PropertyMetadata($class->getName(), $property->getName());
             $annotations = $this->reader->getPropertyAnnotations($property);
 
+            if (empty($annotations)) {
+                continue;
+            }
+
             foreach ($annotations as $annotation) {
                 $annotationClass = get_class($annotation);
 
                 if (!isset($this->annotations[$annotationClass])) {
+                    $propertyMetadata->$field = null;
+
                     continue;
                 }
 
