@@ -111,6 +111,25 @@ class FieldsetManager
     }
 
     /**
+     * Hydrates validated data into the object
+     *
+     * @param object $object
+     * @param array  $data
+     */
+    public function hydrate($object, array $data)
+    {
+        $classMetadata = $this->metadataFactory->getMetadataForClass(get_class($object));
+
+        foreach ($classMetadata->propertyMetadata as $propertyMetadata) {
+            if (!isset($propertyMetadata->type) or !isset($data[$propertyMetadata->name])) {
+                continue;
+            }
+
+            $propertyMetadata->setValue($object, $data[$propertyMetadata->name]);
+        }
+    }
+
+    /**
      * Builds validation for a class
      *
      * @param string    $class
