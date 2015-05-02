@@ -133,7 +133,7 @@ class FieldsetManager
                     $arguments = [];
                 }
 
-                $rule = $validator->createRuleInstance($name, $arguments);
+                $rule = $validator->createRuleInstance($name, [$arguments]);
                 $validator->addRule($propertyMetadata->name, $rule);
             }
         }
