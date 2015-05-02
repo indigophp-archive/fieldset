@@ -12,7 +12,7 @@
 namespace Indigo\Fieldset\Metadata\Driver;
 
 use Doctrine\Common\Annotations\Reader;
-use Metadata\ClassMetadata;
+use Metadata\MergeableClassMetadata;
 use Metadata\Driver\DriverInterface;
 use Indigo\Fieldset\Metadata\PropertyMetadata;
 
@@ -30,11 +30,11 @@ class Annotation implements DriverInterface
      * @var array
      */
     protected $annotations = [
-        'type'       => 'Indigo\Fieldset\Metadata\Annotation\Form\Type',
-        'attributes' => 'Indigo\Fieldset\Metadata\Annotation\Form\Attributes',
-        'meta'       => 'Indigo\Fieldset\Metadata\Annotation\Form\Meta',
-        'rules'      => 'Indigo\Fieldset\Metadata\Annotation\Validation\Rules',
-        'label'      => 'Indigo\Fieldset\Metadata\Annotation\Label',
+        'Indigo\Fieldset\Metadata\Annotation\Form\Type'        => 'type',
+        'Indigo\Fieldset\Metadata\Annotation\Form\Attributes'  => 'attributes',
+        'Indigo\Fieldset\Metadata\Annotation\Form\Meta'        => 'meta',
+        'Indigo\Fieldset\Metadata\Annotation\Validation\Rules' => 'rules',
+        'Indigo\Fieldset\Metadata\Annotation\Label'            => 'label',
     ];
 
     /**
@@ -50,16 +50,25 @@ class Annotation implements DriverInterface
      */
     public function loadMetadataForClass(\ReflectionClass $class)
     {
-        $classMetadata = new ClassMetadata($class->getName());
+        $classMetadata = new MergeableClassMetadata($class->getName());
 
         foreach ($class->getProperties() as $property) {
-            $propertMetadata = new PropertyMetadata($class->getName(), $property->getName());
+            $propertyMetadata = new PropertyMetadata($class->getName(), $property->getName());
+            $annotations = $this->reader->getPropertyAnnotations($property);
 
-            foreach ($this->annotations as $field => $annnotationClass) {
-                $propertMetadata->$field = $this->reader->getPropertyAnnotation($property, $annnotationClass);
+            foreach ($annotations as $annotation) {
+                $annotationClass = get_class($annotation);
+
+                if (!isset($this->annotations[$annotationClass])) {
+                    continue;
+                }
+
+                $field = $this->annotations[$annotationClass];
+
+                $propertyMetadata->$field = $annotation->value;
             }
 
-            $classMetadata->addPropertyMetadata($propertMetadata);
+            $classMetadata->addPropertyMetadata($propertyMetadata);
         }
 
         return $classMetadata;

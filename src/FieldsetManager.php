@@ -55,6 +55,10 @@ class FieldsetManager
         $data = [];
 
         foreach ($classMetadata->propertyMetadata as $propertyMetadata) {
+            if (!isset($propertyMetadata->type)) {
+                continue;
+            }
+
             $data[$propertyMetadata->name] = [
                 'type'       => $propertyMetadata->type,
                 'name'       => $propertyMetadata->name,
