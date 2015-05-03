@@ -53,7 +53,7 @@ class Annotation implements DriverInterface
     {
         $classMetadata = new ClassMetadata($class->getName());
 
-        $fieldsets = $this->reader->getClassAnnotation($class, 'Indigo\Fieldset\Metadata\Annotation\Fieldsets');
+        $fieldsets = $this->reader->getClassAnnotation($class, 'Indigo\Fieldset\Metadata\Annotation\Form\Fieldsets');
 
         if ($fieldsets) {
             $classMetadata->fieldsets = $fieldsets->value;

@@ -79,13 +79,14 @@ class FieldsetManager
             ];
 
             if (isset($propertyMetadata->fieldset)) {
-                $data[$propertyMetadata->fieldset][$propertyMetadata->name] = $field;
+                $data[$propertyMetadata->fieldset]['content'][$propertyMetadata->name] = $field;
             } else {
                 $data[$propertyMetadata->name] = $field;
             }
         }
 
         $generatedForm = $this->formBuilder->generate($data);
+
         $form->setContents($generatedForm);
     }
 
