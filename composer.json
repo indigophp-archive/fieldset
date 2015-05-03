@@ -12,6 +12,7 @@
     ],
     "require": {
         "php": ">=5.4",
+        "indigophp/doctrine-annotation-autoload": "dev-master",
         "fuelphp/fieldset": "dev-master",
         "fuelphp/validation": "dev-master",
         "doctrine/annotations": "~1.2",
