@@ -54,18 +54,35 @@ class FieldsetManager
         $classMetadata = $this->metadataFactory->getMetadataForClass($class);
         $data = [];
 
+        foreach ($classMetadata->fieldsets as $name => $legend) {
+            if (is_int($name)) {
+                $name = $legend;
+            }
+
+            $data[$name] = [
+                'type'   => 'fieldset',
+                'legend' => $legend,
+            ];
+        }
+
         foreach ($classMetadata->propertyMetadata as $propertyMetadata) {
             if (!isset($propertyMetadata->type)) {
                 continue;
             }
 
-            $data[$propertyMetadata->name] = [
+            $field = [
                 'type'       => $propertyMetadata->type,
                 'name'       => $propertyMetadata->name,
                 'label'      => $propertyMetadata->label,
                 'attributes' => $propertyMetadata->attributes,
                 'meta'       => $propertyMetadata->meta,
             ];
+
+            if (isset($propertyMetadata->fieldset)) {
+                $data[$propertyMetadata->fieldset][$propertyMetadata->name] = $field;
+            } else {
+                $data[$propertyMetadata->name] = $field;
+            }
         }
 
         $generatedForm = $this->formBuilder->generate($data);

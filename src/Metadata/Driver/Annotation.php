@@ -12,8 +12,8 @@
 namespace Indigo\Fieldset\Metadata\Driver;
 
 use Doctrine\Common\Annotations\Reader;
-use Metadata\MergeableClassMetadata;
 use Metadata\Driver\DriverInterface;
+use Indigo\Fieldset\Metadata\ClassMetadata;
 use Indigo\Fieldset\Metadata\PropertyMetadata;
 
 /**
@@ -30,9 +30,10 @@ class Annotation implements DriverInterface
      * @var array
      */
     protected $annotations = [
-        'Indigo\Fieldset\Metadata\Annotation\Form\Type'        => 'type',
         'Indigo\Fieldset\Metadata\Annotation\Form\Attributes'  => 'attributes',
+        'Indigo\Fieldset\Metadata\Annotation\Form\Fieldset'    => 'fieldset',
         'Indigo\Fieldset\Metadata\Annotation\Form\Meta'        => 'meta',
+        'Indigo\Fieldset\Metadata\Annotation\Form\Type'        => 'type',
         'Indigo\Fieldset\Metadata\Annotation\Validation\Rules' => 'rules',
         'Indigo\Fieldset\Metadata\Annotation\Label'            => 'label',
     ];
@@ -50,7 +51,13 @@ class Annotation implements DriverInterface
      */
     public function loadMetadataForClass(\ReflectionClass $class)
     {
-        $classMetadata = new MergeableClassMetadata($class->getName());
+        $classMetadata = new ClassMetadata($class->getName());
+
+        $fieldsets = $this->reader->getClassAnnotation($class, 'Indigo\Fieldset\Metadata\Annotation\Fieldsets');
+
+        if ($fieldsets) {
+            $classMetadata->fieldsets = $fieldsets->value;
+        }
 
         foreach ($class->getProperties() as $property) {
             $propertyMetadata = new PropertyMetadata($class->getName(), $property->getName());

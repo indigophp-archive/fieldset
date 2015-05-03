@@ -11,6 +11,8 @@
 
 require_once __DIR__.'/Annotation/Label.php';
 require_once __DIR__.'/Annotation/Form/Attributes.php';
+require_once __DIR__.'/Annotation/Form/Fieldset.php';
+require_once __DIR__.'/Annotation/Form/Fieldsets.php';
 require_once __DIR__.'/Annotation/Form/Meta.php';
 require_once __DIR__.'/Annotation/Form/Type.php';
 require_once __DIR__.'/Annotation/Validation/Rules.php';
