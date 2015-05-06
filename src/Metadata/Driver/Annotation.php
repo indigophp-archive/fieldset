@@ -27,18 +27,6 @@ class Annotation implements DriverInterface
     protected $reader;
 
     /**
-     * @var array
-     */
-    protected $annotations = [
-        'Indigo\Fieldset\Metadata\Annotation\Form\Attributes'  => 'attributes',
-        'Indigo\Fieldset\Metadata\Annotation\Form\Fieldset'    => 'fieldset',
-        'Indigo\Fieldset\Metadata\Annotation\Form\Meta'        => 'meta',
-        'Indigo\Fieldset\Metadata\Annotation\Form\Type'        => 'type',
-        'Indigo\Fieldset\Metadata\Annotation\Validation\Rules' => 'rules',
-        'Indigo\Fieldset\Metadata\Annotation\Label'            => 'label',
-    ];
-
-    /**
      * @param Reader $reader
      */
     public function __construct(Reader $reader)
@@ -53,35 +41,49 @@ class Annotation implements DriverInterface
     {
         $classMetadata = new ClassMetadata($class->getName());
 
-        $fieldsets = $this->reader->getClassAnnotation($class, 'Indigo\Fieldset\Metadata\Annotation\Form\Fieldsets');
+        $form = $this->reader->getClassAnnotation($class, 'Indigo\Fieldset\Metadata\Annotation\Form');
 
-        if ($fieldsets) {
-            $classMetadata->fieldsets = $fieldsets->value;
-        }
+        // There is a form which should be processed
+        if ($form = $this->reader->getClassAnnotation($class, 'Indigo\Fieldset\Metadata\Annotation\Form')) {
+            $classMetadata->action = $form->action;
+            $classMetadata->attributes = $form->attributes;
+            $classMetadata->method = $form->method;
 
-        foreach ($class->getProperties() as $property) {
-            $propertyMetadata = new PropertyMetadata($class->getName(), $property->getName());
-            $annotations = $this->reader->getPropertyAnnotations($property);
+            // Process fieldsets
+            foreach ($form->fieldsets as $fieldset) {
+                $classMetadata->fieldsets[$fieldset->name] = [
+                    'fields' => $fieldset->fields,
+                ];
 
-            if (empty($annotations)) {
-                continue;
+                if (isset($fieldset->legend)) {
+                    $classMetadata->fieldsets[$fieldset->name]['legend'] = $fieldset->legend;
+                }
             }
 
-            foreach ($annotations as $annotation) {
-                $annotationClass = get_class($annotation);
+            // Process form fields
+            foreach ($class->getProperties() as $property) {
+                $field = $this->reader->getPropertyAnnotation($property, 'Indigo\Fieldset\Metadata\Annotation\Form\Field');
 
-                if (!isset($this->annotations[$annotationClass])) {
-                    $propertyMetadata->$field = null;
-
+                if (!isset($field)) {
                     continue;
                 }
 
-                $field = $this->annotations[$annotationClass];
+                $propertyMetadata = new PropertyMetadata($class->getName(), $property->getName());
 
-                $propertyMetadata->$field = $annotation->value;
+                $propertyMetadata->attributes = $field->attributes;
+                $propertyMetadata->meta = $field->meta;
+                $propertyMetadata->type = $field->type;
+
+                if ($label = $this->reader->getPropertyAnnotation($property, 'Indigo\Fieldset\Metadata\Annotation\Label')) {
+                    $propertyMetadata->label = $label->value;
+                }
+
+                if ($rules = $this->reader->getPropertyAnnotation($property, 'Indigo\Fieldset\Metadata\Annotation\Validation\Rules')) {
+                    $propertyMetadata->rules = $rules->value;
+                }
+
+                $classMetadata->addPropertyMetadata($propertyMetadata);
             }
-
-            $classMetadata->addPropertyMetadata($propertyMetadata);
         }
 
         return $classMetadata;

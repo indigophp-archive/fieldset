@@ -19,24 +19,19 @@ use Metadata\PropertyMetadata as BasePropertyMetadata;
 class PropertyMetadata extends BasePropertyMetadata
 {
     /**
-     * @var array
+     * @var string[]
      */
     public $attributes = [];
 
     /**
      * @var string
      */
-    public $fieldset;
+    public $label;
 
     /**
      * @var array
      */
     public $meta = [];
-
-    /**
-     * @var string
-     */
-    public $type;
 
     /**
      * @var array
@@ -46,5 +41,5 @@ class PropertyMetadata extends BasePropertyMetadata
     /**
      * @var string
      */
-    public $label;
+    public $type;
 }

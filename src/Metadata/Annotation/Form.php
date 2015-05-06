@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Indigo\Fieldset\Metadata\Annotation\Form;
+namespace Indigo\Fieldset\Metadata\Annotation;
 
 /**
  * @Annotation
@@ -17,10 +17,27 @@ namespace Indigo\Fieldset\Metadata\Annotation\Form;
  *
  * @author Márk Sági-Kazár <mark.sagikazar@gmail.com>
  */
-final class Fieldsets
+final class Form
 {
+    /**
+     * @var string
+     */
+    public $action;
+
     /**
      * @var array
      */
-    public $value = [];
+    public $attributes = [];
+
+    /**
+     * @var \Indigo\Fieldset\Metadata\Annotation\Form\Fieldset[]
+     */
+    public $fieldsets = [];
+
+    /**
+     * @Enum({"GET", "POST"})
+     *
+     * @var string
+     */
+    public $method = 'GET';
 }

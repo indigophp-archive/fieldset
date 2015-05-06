@@ -13,14 +13,26 @@ namespace Indigo\Fieldset\Metadata\Annotation\Form;
 
 /**
  * @Annotation
- * @Target({"PROPERTY"})
+ * @Target({"ANNOTATION"})
  *
  * @author Márk Sági-Kazár <mark.sagikazar@gmail.com>
  */
 final class Fieldset
 {
     /**
+     * @Required
+     *
      * @var string
      */
-    public $value;
+    public $name;
+
+    /**
+     * @var string
+     */
+    public $legend;
+
+    /**
+     * @var string[]
+     */
+    public $fields;
 }

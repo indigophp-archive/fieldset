@@ -20,6 +20,8 @@ namespace Indigo\Fieldset\Metadata\Annotation\Validation;
 final class Rules
 {
     /**
+     * @Required
+     *
      * @var array
      */
     public $value = [];

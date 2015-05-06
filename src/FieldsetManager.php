@@ -52,42 +52,62 @@ class FieldsetManager
     public function buildForm($class, Form $form)
     {
         $classMetadata = $this->metadataFactory->getMetadataForClass($class);
+        $propertyMetadata = $classMetadata->propertyMetadata;
         $data = [];
 
-        foreach ($classMetadata->fieldsets as $name => $legend) {
-            if (is_int($name)) {
-                $name = $legend;
+        $attributes = $classMetadata->attributes;
+        $attributes['action'] = $classMetadata->action;
+        $attributes['method'] = $classMetadata->method;
+
+        $form->setAttributes($attributes);
+
+        foreach ($classMetadata->fieldsets as $name => $fieldset) {
+            $fieldset['type'] = 'fieldset';
+
+            $fields = $fieldset['fields'];
+            unset($fieldset['fields']);
+
+            foreach ($fields as &$field) {
+                if (!isset($propertyMetadata[$field])) {
+                    throw new \RuntimException(sprintf('%s is expected to have a(n) %s field', $class, $field));
+                }
+
+                $fieldset['content'][$field] = $this->buildFormField($propertyMetadata[$field]);
+                unset($propertyMetadata[$field]);
             }
 
-            $data[$name] = [
-                'type'   => 'fieldset',
-                'legend' => $legend,
-            ];
+            $data[$name] = $fieldset;
         }
 
-        foreach ($classMetadata->propertyMetadata as $propertyMetadata) {
-            if (!isset($propertyMetadata->type)) {
-                continue;
-            }
-
-            $field = [
-                'type'       => $propertyMetadata->type,
-                'name'       => $propertyMetadata->name,
-                'label'      => $propertyMetadata->label,
-                'attributes' => $propertyMetadata->attributes,
-                'meta'       => $propertyMetadata->meta,
-            ];
-
-            if (isset($propertyMetadata->fieldset)) {
-                $data[$propertyMetadata->fieldset]['content'][$propertyMetadata->name] = $field;
-            } else {
-                $data[$propertyMetadata->name] = $field;
-            }
+        // Process fields
+        // If no fieldsets are in use, this processes all fields
+        // Otherwise fieldset fields are processed above
+        // (Ideally fieldsets should be used for all or none fields)
+        foreach ($propertyMetadata as $propertyName => $pMetadata) {
+            $data[$propertyName] = $this->buildFormField($pMetadata);
         }
 
         $generatedForm = $this->formBuilder->generate($data);
 
         $form->setContents($generatedForm);
+    }
+
+    /**
+     * Builds a field from metadata
+     *
+     * @param Metadata\PropertyMetadata $field
+     *
+     * @return array
+     */
+    protected function buildFormField(Metadata\PropertyMetadata $propertyMetadata)
+    {
+        return [
+            'type'       => $propertyMetadata->type,
+            'name'       => $propertyMetadata->name,
+            'label'      => $propertyMetadata->label,
+            'attributes' => $propertyMetadata->attributes,
+            'meta'       => $propertyMetadata->meta,
+        ];
     }
 
     /**

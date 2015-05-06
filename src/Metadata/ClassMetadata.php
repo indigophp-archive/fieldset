@@ -19,7 +19,22 @@ use Metadata\MergeableClassMetadata;
 class ClassMetadata extends MergeableClassMetadata
 {
     /**
+     * @var string
+     */
+    public $action;
+
+    /**
      * @var array
      */
     public $fieldsets = [];
+
+    /**
+     * @var array
+     */
+    public $attributes = [];
+
+    /**
+     * @var string
+     */
+    public $method;
 }

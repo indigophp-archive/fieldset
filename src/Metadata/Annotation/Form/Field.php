@@ -17,10 +17,22 @@ namespace Indigo\Fieldset\Metadata\Annotation\Form;
  *
  * @author Márk Sági-Kazár <mark.sagikazar@gmail.com>
  */
-final class Attributes
+final class Field
 {
+    /**
+     * @Required
+     *
+     * @var string
+     */
+    public $type;
+
+    /**
+     * @var string[]
+     */
+    public $attributes = [];
+
     /**
      * @var array
      */
-    public $value = [];
+    public $meta = [];
 }
