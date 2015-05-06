@@ -25,10 +25,13 @@ $ composer require indigophp/fieldset
 Create your entity which you want to use in the form:
 
 ``` php
+/**
+ * @Form
+ */
 class Entity
 {
     /**
-     * @Form\Type('text')
+     * @Form\Field('text')
      */
     protected $property;
 }
