@@ -95,7 +95,7 @@ class FieldsetManager
     /**
      * Builds a field from metadata
      *
-     * @param Metadata\PropertyMetadata $field
+     * @param Metadata\PropertyMetadata $propertyMetadata
      *
      * @return array
      */
